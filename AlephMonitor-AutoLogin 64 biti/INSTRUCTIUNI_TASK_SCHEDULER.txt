@@ -1,0 +1,118 @@
+═══════════════════════════════════════════════════════════════════════════
+📋 INSTRUCȚIUNI PENTRU CONFIGURAREA TASK SCHEDULER
+═══════════════════════════════════════════════════════════════════════════
+
+🎯 OBIECTIV:
+   Configurare Task Scheduler pentru a rula AlephMonitor-AutoLogin.exe
+   automat la pornirea Windows, fără a fura focusul sau a deschide ferestre.
+
+═══════════════════════════════════════════════════════════════════════════
+
+📝 PAȘI DE CONFIGURARE:
+
+1. DESCHIDE TASK SCHEDULER
+   • Apasă Win + R
+   • Scrie: taskschd.msc
+   • Apasă Enter
+
+2. CREEAZĂ TASK NOU
+   • În panoul dreapta: "Create Basic Task..." sau "Create Task..."
+   • Nume: "Aleph Monitor Auto Login"
+   • Descriere: "Monitorizeaza serverul ALEPH si reporneste automat Catalog.exe"
+
+3. CONFIGUREAZĂ TRIGGER (Când să ruleze)
+   
+   OPTIUNE A: La pornirea Windows (RECOMANDAT)
+   • Trigger: "When the computer starts"
+   
+   OPTIUNE B: La logon utilizator
+   • Trigger: "When a user logs on"
+   • Selectează utilizatorul tău
+   
+   OPTIUNE C: Zilnic la o anumită oră
+   • Trigger: "Daily"
+   • Setează ora dorită (ex: 08:00)
+
+4. CONFIGUREAZĂ ACTION (Ce să execute)
+   • Action: "Start a program"
+   • Program/script: Click "Browse..." și selectează:
+     start_aleph_monitor.bat
+   • Sau dacă vrei direct EXE-ul:
+     dist\AlephMonitor-AutoLogin.exe
+   • Start in (optional): Lasă gol sau pune calea completă către folder
+
+5. CONFIGUREAZĂ SETTINGS (Critice pentru a nu fura focus!)
+   
+   TAB "General":
+   ✓ Run whether user is logged on or not
+   ✓ Run with highest privileges (opțional, dar recomandat)
+   □ Hidden (OPȚIONAL - dacă vrei să vezi aplicația)
+   
+   TAB "Conditions":
+   □ Start the task only if the computer is on AC power
+   (Lasă dezactivat dacă vrei să ruleze și pe baterie)
+   
+   TAB "Settings":
+   • If the task is already running: "Do not start a new instance"
+   • If the task fails to start: "Restart the task"
+   • Stop the task if it runs longer than: Lasă gol sau 24 ore
+
+6. SALVEAZĂ ȘI TESTEAZĂ
+   • Click OK (va cere parola Windows dacă ai selectat "Run whether user is logged on")
+   • Click dreapta pe task → "Run" pentru testare
+   • Verifică în Task Manager că procesul "AlephMonitor-AutoLogin.exe" rulează
+
+═══════════════════════════════════════════════════════════════════════════
+
+✅ VERIFICARE CĂ FUNCȚIONEAZĂ:
+
+1. Verifică procesul:
+   • Task Manager (Ctrl+Shift+Esc)
+   • Tab "Details"
+   • Caută "AlephMonitor-AutoLogin.exe"
+   • Ar trebui să fie în listă
+
+2. Verifică log-ul:
+   • Deschide fișierul: aleph_monitor.log
+   • Ar trebui să vezi mesaje de monitorizare
+
+3. Testează manual:
+   • Rulează start_aleph_monitor.bat
+   • Sau rulează direct dist\AlephMonitor-AutoLogin.exe
+   • Aplicația ar trebui să pornească fără a fura focusul
+
+═══════════════════════════════════════════════════════════════════════════
+
+⚠️ IMPORTANT:
+
+• Aplicația rulează în background și NU va deschide ferestre peste alte aplicații
+• Browser-ul NU se va mai deschide automat (accesul se face prin HTTP)
+• Catalog.exe se lansează minimizat, fără a fura focusul
+• Nu se mai trimit taste globale ("admin"/"admin123") care să interfereze
+
+═══════════════════════════════════════════════════════════════════════════
+
+🔧 TROUBLESHOOTING:
+
+PROBLEMA: Task-ul nu pornește
+SOLUȚIE: Verifică în Task Scheduler → History că există erori.
+         Verifică că calea către .bat sau .exe este corectă.
+
+PROBLEMA: Aplicația se deschide peste alte ferestre
+SOLUȚIE: Verifică că ai selectat "Run whether user is logged on or not"
+         și că ai folosit scriptul .bat (care folosește START /MIN)
+
+PROBLEMA: Se deschid mai multe instanțe
+SOLUȚIE: În Settings → "If the task is already running":
+         Selectează "Do not start a new instance"
+
+═══════════════════════════════════════════════════════════════════════════
+
+📁 FIȘIERE IMPORTANTE:
+
+• start_aleph_monitor.bat - Script pentru Task Scheduler
+• dist\AlephMonitor-AutoLogin.exe - Executabilul principal
+• aleph_monitor.log - Log-uri aplicație (se creează automat)
+
+═══════════════════════════════════════════════════════════════════════════
+
